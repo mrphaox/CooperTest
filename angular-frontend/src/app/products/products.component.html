@@ -1,0 +1,185 @@
+<div class="products-container">
+  <canvas id="backgroundCanvas"></canvas>
+  <mat-card class="table-card">
+    <!-- Toolbar Mejorada -->
+    <mat-toolbar class="toolbar">
+      <div class="toolbar-left">
+        <span class="title">📦 Gestión de Productos</span>
+      </div>
+      <div class="toolbar-center">
+        <mat-form-field class="search-field" appearance="outline">
+          <mat-label>Buscar</mat-label>
+          <input matInput [(ngModel)]="searchTerm" placeholder="Nombre o categoría" />
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+      </div>
+      <div class="toolbar-right">
+        <button mat-raised-button class="action-button add-button" (click)="openEditDialog()">
+          <mat-icon>add</mat-icon> Agregar Producto
+        </button>
+        <button mat-raised-button class="action-button logout-button" (click)="logout()">
+          <mat-icon>logout</mat-icon> Cerrar sesión
+        </button>
+      </div>
+    </mat-toolbar>
+    <br>
+    <mat-card-content>
+      <div class="table-wrapper">
+        <table mat-table [dataSource]="filteredProducts" class="mat-elevation-z8 futuristic-table">
+          <ng-container matColumnDef="nombre">
+            <th mat-header-cell *matHeaderCellDef>Nombre</th>
+            <td mat-cell *matCellDef="let product">{{ product.nombre }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="descripcion">
+            <th mat-header-cell *matHeaderCellDef>Descripción</th>
+            <td mat-cell *matCellDef="let product">{{ product.descripcion }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="precio">
+            <th mat-header-cell *matHeaderCellDef>Precio</th>
+            <td mat-cell *matCellDef="let product">{{ product.precio | currency }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="categoria">
+            <th mat-header-cell *matHeaderCellDef>Categoría</th>
+            <td mat-cell *matCellDef="let product">{{ product.categoria }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="acciones">
+            <th mat-header-cell *matHeaderCellDef>Acciones</th>
+            <td mat-cell *matCellDef="let product">
+              <button mat-icon-button class="edit-button" (click)="openEditDialog(product)" matTooltip="Editar">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button class="delete-button" (click)="openDeleteDialog(product._id!)" matTooltip="Eliminar">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<style>
+  body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    overflow: hidden;
+  }
+
+  .products-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100%;
+    padding: 3rem;
+    position: relative;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  }
+
+  .table-card {
+    width: 95%;
+    max-width: 1100px;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+  }
+
+  .toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border-radius: 12px;
+    width: 100%;
+  }
+
+  .search-field {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .action-button {
+    font-weight: bold;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    margin-left: 10px;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+  }
+
+  .add-button {
+    background: #21c87a;
+  }
+
+  .logout-button {
+    background: #c82f2f;
+  }
+
+  .add-button:hover, .logout-button:hover {
+    transform: scale(1.05);
+  }
+
+  .futuristic-table th {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    font-weight: bold;
+    padding: 14px;
+    font-size: 14px;
+    text-transform: uppercase;
+  }
+
+  .futuristic-table td {
+    padding: 10px;
+    font-size: 14px;
+    color: white;
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .futuristic-table tr:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transition: background 0.3s ease;
+  }
+</style>
+
+
+<script>
+  const canvas = document.getElementById('backgroundCanvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  let particles = [];
+  for (let i = 0; i < 50; i++) {
+    particles.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, size: Math.random() * 3 + 1, dx: Math.random() * 2 - 1, dy: Math.random() * 2 - 1 });
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => {
+      p.x += p.dx;
+      p.y += p.dy;
+      if (p.x > canvas.width || p.x < 0) p.dx *= -1;
+      if (p.y > canvas.height || p.y < 0) p.dy *= -1;
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      ctx.fill();
+    });
+    requestAnimationFrame(animate);
+  }
+  animate();
+</script>

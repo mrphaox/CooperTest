@@ -1,0 +1,47 @@
+<mat-card class="dialog-card">
+  <mat-toolbar color="primary">
+    <span>{{ product ? 'Editar Producto' : 'Agregar Producto' }}</span>
+    <span class="spacer"></span>
+    <button mat-icon-button (click)="closeDialog()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-toolbar>
+
+  <mat-card-content>
+    <form [formGroup]="productForm">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Nombre</mat-label>
+        <input matInput formControlName="nombre" placeholder="Nombre del producto" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Descripción</mat-label>
+        <input matInput formControlName="descripcion" placeholder="Descripción del producto" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Precio</mat-label>
+        <input matInput type="number" formControlName="precio" placeholder="Precio en USD" />
+        <mat-error *ngIf="productForm.get('precio')?.hasError('min')">
+          El precio debe ser mayor a 0
+        </mat-error>
+        <mat-error *ngIf="productForm.get('precio')?.hasError('required')">
+          El precio es obligatorio
+        </mat-error>
+      </mat-form-field>
+
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Categoría</mat-label>
+        <input matInput formControlName="categoria" placeholder="Categoría del producto" />
+      </mat-form-field>
+    </form>
+  </mat-card-content>
+
+  <mat-card-actions align="end">
+    <button mat-button (click)="closeDialog()">Cancelar</button>
+    <button mat-raised-button color="primary" (click)="saveProduct()" [disabled]="productForm.invalid">
+      {{ product ? 'Actualizar' : 'Guardar' }}
+    </button>
+  </mat-card-actions>
+</mat-card>
