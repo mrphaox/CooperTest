@@ -185,7 +185,7 @@ La documentación se genera automáticamente y se puede acceder a través de Swa
 ### Ejemplo de Configuración de Middleware y Autenticación
 Middleware de Logging
 **typescript**
-
+ ```
 // src/common/middleware/logging.middleware.ts
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
@@ -200,8 +200,9 @@ export class LoggingMiddleware implements NestMiddleware {
   }
 }
 Aplicación del Middleware en AppModule
-typescript
-Copiar código
+ ```
+a
+ ```
 // src/app.module.ts
 import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
@@ -227,9 +228,9 @@ export class AppModule implements NestModule {
     consumer.apply(LoggingMiddleware).forRoutes('*');
   }
 }
-
+ ```
 ### Configuración del JWT en el Backend
-
+```
 // src/auth/strategies/jwt.strategy.ts
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
@@ -259,9 +260,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     return { userId: payload.sub, username: payload.username, role: payload.role };
   }
 }
-
+```
 ### Ejemplo de un Endpoint Protegido
-
+```
 // src/auth/auth.controller.ts
 import { Controller, Get, Request, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
@@ -279,5 +280,5 @@ export class AuthController {
     return req.user;
   }
 }
-
+```
 ## GRACIAS
