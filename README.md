@@ -133,7 +133,7 @@ Aquí podrás ver y probar todos los endpoints disponibles, incluidos los proteg
 ### Estructura del Proyecto
 Una estructura de carpetas sugerida es:
 
-
+ ``` 
 nestjs-backend/
 ├── src/
 │   ├── auth/
@@ -168,7 +168,7 @@ nestjs-backend/
 ├── package.json
 ├── tsconfig.json
 └── ...
-
+ ```
 ## Notas Adicionales
 CORS: La aplicación tiene habilitado CORS para permitir peticiones desde el frontend (por ejemplo, http://localhost:4200).
 Middleware de Logging: Se utiliza un middleware para registrar las cabeceras de las peticiones y facilitar la depuración.
